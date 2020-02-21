@@ -9,7 +9,7 @@ end
 -- General settings
 
 function ROLE:PreInitialize()
-	self.color = Color(238, 064, 000, 255) -- rolecolour
+	self.color = Color(255, 064, 064, 255) -- rolecolour
 	
 	self.abbr = 'optio' -- Abbreviation
 	self.unknownTeam = false -- No teamchat
@@ -32,4 +32,12 @@ function ROLE:PreInitialize()
 		togglable = true, -- option to toggle a role for a client if possible (F1 menu)
 		random = 50
 	}
+end
+
+function ROLE:GiveRoleLoadout( ply, isRoleChange )
+	ply:GiveEquipmentWeapon("weapon_ttt_optioshotgun")
+end
+
+function ROLE:RemoveRoleLoadout( ply, isRoleChange )
+	ply:StripWeapon("weapon_ttt_optioshotgun")
 end

@@ -9,7 +9,7 @@ end
 -- General settings
 
 function ROLE:PreInitialize()
-	self.color = Color(255, 246, 143, 255) -- rolecolour
+	self.color = Color(127, 255, 212, 255) -- rolecolour
 	
 	self.abbr = 'glad' -- Abbreviation
 	self.unknownTeam = false -- teamchat available

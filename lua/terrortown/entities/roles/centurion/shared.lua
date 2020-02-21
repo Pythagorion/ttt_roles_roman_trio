@@ -9,13 +9,13 @@ end
 --Initializing Centurion´s Team
 roles.InitCustomTeam(ROLE.name, {
 	icon = "vgui/ttt/dynamic/roles/icon_cent",
-	color = Color(238, 238, 000, 255)
+	color = Color(102, 205, 170, 255)
 })
 
 -- General settings
 
 function ROLE:PreInitialize()
-	self.color = Color(238, 238, 000, 255) -- rolecolour
+	self.color = Color(102, 205, 170, 255) -- rolecolour
 	
 	self.abbr = 'cent' -- Abbreviation
 	self.unknownTeam = false -- teamchat available

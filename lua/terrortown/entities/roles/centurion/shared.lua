@@ -19,7 +19,7 @@ function ROLE:PreInitialize()
 	
 	self.abbr = 'cent' -- Abbreviation
 	self.unknownTeam = false -- teamchat available
-	self.defaultTeam = TEAM_CENT -- no team, own team
+	self.defaultTeam = TEAM_CENTURION -- no team, own team
 	self.preventFindCredits = false -- Isn´t able to find/get credits for his perfomance
 	self.preventKillCredits = false -- Isn´t able to find/get credits for his perfomance
 	self.preventTraitorAloneCredits = false -- Isn´t able to find/get credits for his perfomance
@@ -39,4 +39,12 @@ function ROLE:PreInitialize()
 		togglable = true, -- option to toggle a role for a client if possible (F1 menu)
 		random = 50
 	}
+end
+
+function ROLE:GiveRoleLoadout( ply, isRoleChange )
+	ply:GiveEquipmentWeapon("weapon_ttt_incridibilisgun")
+end
+
+function ROLE:RemoveRoleLoadout( ply, isRoleChange )
+	ply:StripWeapon("weapon_ttt_incridibilisgun")
 end

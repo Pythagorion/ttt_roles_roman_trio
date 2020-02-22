@@ -13,7 +13,7 @@ function ROLE:PreInitialize()
 	
 	self.abbr = 'optio' -- Abbreviation
 	self.unknownTeam = false -- No teamchat
-	self.defaultTeam = TEAM_TRAITOR -- no team, own team
+	self.defaultTeam = TEAM_TRAITOR -- traitor team
 	self.preventFindCredits = false -- Is able to find/get credits for his perfomance
 	self.preventKillCredits = false -- Is able to find/get credits for his perfomance
 	self.preventTraitorAloneCredits = false -- Is able to find/get credits for his perfomance
@@ -41,3 +41,27 @@ end
 function ROLE:RemoveRoleLoadout( ply, isRoleChange )
 	ply:StripWeapon("weapon_ttt_optioshotgun")
 end
+
+hook.Add("TTT2SpecialRoleSyncing", "TTT2RoleOptioMod", function(ply, tbl)
+	if ply and not ply:HasTeam(TEAM_TRAITOR) or ply:GetSubRoleData().unknownTeam or GetRoundState() == ROUND_POST then return end
+
+	local optioSelected = false
+
+	for optio in pairs(tbl) do
+		if optio:IsTerror() and optio:Alive() and optio:GetRole() == ROLE_OPTIO then
+			tbl[optio] = {ROLE_TRAITOR, TEAM_TRAITOR}
+
+			optioSelected = true
+		end	
+	end
+
+	if not optioSelected then return end
+
+	for traitor in pairs(tbl) do
+		if traitor == ply then continue end
+
+		if traitor:IsTerror() and traitor:Alive() and traitor:GetBaseRole() == ROLE_TRAITOR then
+			tbl[traitor] = {ROLE_TRAITOR, TEAM_TRAITOR}
+		end
+	end
+end)

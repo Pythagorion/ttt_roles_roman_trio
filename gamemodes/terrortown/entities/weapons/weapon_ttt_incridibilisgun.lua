@@ -42,8 +42,6 @@ SWEP.IronSightsAng = Vector(0, 0, 0)
 
 SWEP.AllowDrop = false 
 
-nomoreresp = true
-
 local rspwn_time = GetConVar("ttt_cent_gladiator_time_of_respawn"):GetInt()
 
 function SWEP:PrimaryAttack()
@@ -62,23 +60,23 @@ function SWEP:PrimaryAttack()
     if not IsValid(owner) or owner:IsNPC() or (not owner.ViewPunch) then return end
 
     owner:ViewPunch(Angle(util.SharedRandom(self:GetClass(), -0.2, -0.1, 0) * self.Primary.Recoil, util.SharedRandom(self:GetClass(), -0.1, 0.1, 1) * self.Primary.Recoil, 0))
-
-    if SERVER and self:Clip1() < 1 then
-        timer.Simple(rspwn_time + 0.1, function()
-		    nomoreresp = false
-        end)
-	end
     
 end
 
 if SERVER then
     hook.Add("PlayerDeath", "ReviveANewGladi", function(victim, inflictor, attacker)
-        if nomoreresp then
-            if attacker:GetRole() == ROLE_CENTURION and victim:GetTeam() ~= TEAM_CENTURION and attacker:GetActiveWeapon("weapon_ttt_incridibilisgun") then
-                victim:Revive(rspwn_time, function(p)
-                    p:SetRole(ROLE_GLADIATOR)
-                end)
-            end
+
+        if attacker:GetRole() == ROLE_CENTURION and victim:GetTeam() ~= TEAM_CENTURION and inflictor:GetClass() == "weapon_ttt_incridibilisgun" then
+
+            print("true")
+
+            victim:Revive(rspwn_time, function(p)
+                p:SetRole( ROLE_GLADIATOR )
+            end)
         end
     end)
 end
+
+hook.Add("ScalePlayerDamage", "Printinfl", function(ply, hitgroup, dmginfo)
+    print( dmginfo:GetInflictor():GetClass() )
+end)

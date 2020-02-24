@@ -64,7 +64,9 @@ function SWEP:PrimaryAttack()
     owner:ViewPunch(Angle(util.SharedRandom(self:GetClass(), -0.2, -0.1, 0) * self.Primary.Recoil, util.SharedRandom(self:GetClass(), -0.1, 0.1, 1) * self.Primary.Recoil, 0))
 
     if SERVER and self:Clip1() < 1 then
-		nomorerev = false
+        timer.Simple(rspwn_time + 0.1, function()
+		    nomorerev = false
+        end)
 	end
     
 end
@@ -72,7 +74,7 @@ end
 if SERVER then
     hook.Add("PlayerDeath", "ReviveANewTraitor", function(victim, inflictor, attacker)
         if nomorerev then
-            if attacker:GetRole() == ROLE_OPTIO and victim:GetTeam() ~= TEAM_TRAITOR then
+            if attacker:GetRole() == ROLE_OPTIO and victim:GetTeam() ~= TEAM_TRAITOR and attacker:GetActiveWeapon():GetClass() == "weapon_ttt_optiogun" then
                 victim:Revive(respawn_time, function(p)
                     p:SetRole(ROLE_TRAITOR)
                 end)

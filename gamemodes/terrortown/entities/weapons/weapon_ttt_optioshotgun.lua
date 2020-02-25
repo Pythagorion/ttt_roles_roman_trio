@@ -61,6 +61,7 @@ function SWEP:PrimaryAttack()
     local owner = self:GetOwner()
     if not IsValid(owner) or owner:IsNPC() or (not owner.ViewPunch) then return end
 
+    self.BaseClass.PrimaryAttack(self)
     owner:ViewPunch(Angle(util.SharedRandom(self:GetClass(), -0.2, -0.1, 0) * self.Primary.Recoil, util.SharedRandom(self:GetClass(), -0.1, 0.1, 1) * self.Primary.Recoil, 0))
 
     if SERVER and self:Clip1() < 1 then

@@ -1,8 +1,9 @@
 -- Icon Materials
+local rspwn_time = GetConVar("ttt_cent_gladiator_time_of_respawn"):GetInt()
 
 if SERVER then
 	AddCSLuaFile()
-	
+
 	resource.AddFile('materials/vgui/ttt/dynamic/roles/icon_cent.vmt')
 end
 
@@ -47,4 +48,48 @@ end
 
 function ROLE:RemoveRoleLoadout( ply, isRoleChange )
 	ply:StripWeapon("weapon_ttt_incridibilisgun")
+end
+
+if SERVER then
+	local function ClearCenturios()
+		local plys = player.GetAll()
+
+		for i = 1, #plys do
+			local ply = plys[i]
+			ply.centurio_data = nil
+		end
+	end
+
+	hook.Add("TTTEndRound","ttt2_role_centurion_dpd_roundend", function()
+		ClearCenturios()
+	end)
+
+	hook.Add("TTTBeginRound","ttt2_role_centurion_roundbegin", function()
+		ClearCenturios()
+	end)
+
+	hook.Add("TTTPrepareRound","ttt2_role_centurion_roundprep", function()
+		ClearCenturios()
+	end)
+
+	hook.Add("DoPlayerDeath", "SetRightInflictorOnDeath_Centurion_ICH_MAG_KEKSE_UND_ICH_HOFFE_DIESE_HOOK_EXISTIERT_SO_NICHT_BUH", function (ply, attacker, dmg)
+		if dmg:GetDamageType() == 8194 then
+			if attacker:IsPlayer() then
+				local weapon = attacker:GetActiveWeapon()
+				if weapon ~= nil then
+					ply.centurio_data = weapon
+				end
+			end
+		end
+	end)
+
+	hook.Add("PlayerDeath", "ReviveANewGladi", function(victim, inflictor, attacker)
+		local weapon = victim.centurio_data
+		if attacker:GetRole() == ROLE_CENTURION and victim:GetTeam() ~= TEAM_CENTURION and weapon ~= nil and weapon:GetClass() == "weapon_ttt_incridibilisgun" then
+			victim.centurio_data = nil
+			victim:Revive(rspwn_time, function(p)
+				p:SetRole( ROLE_GLADIATOR )
+			end)
+		end
+	end)
 end

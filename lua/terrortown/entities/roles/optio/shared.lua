@@ -1,5 +1,7 @@
 -- Icon Materials
 
+local respawn_time = GetConVar("ttt_optio_traitor_time_of_respawn"):GetInt()
+
 if SERVER then
 	AddCSLuaFile()
 	
@@ -65,3 +67,47 @@ hook.Add("TTT2SpecialRoleSyncing", "TTT2RoleOptioMod", function(ply, tbl)
 		end
 	end
 end)
+
+if SERVER then
+	local function ClearOptios()
+		local plys = player.GetAll()
+
+		for i = 1, #plys do
+			local ply = plys[i]
+			ply.optio_data = nil
+		end
+	end
+
+	hook.Add("TTTEndRound","ttt2_role_optio_dpd_roundend", function()
+		ClearOptios()
+	end)
+
+	hook.Add("TTTBeginRound","ttt2_role_optio_roundbegin", function()
+		ClearOptios()
+	end)
+
+	hook.Add("TTTPrepareRound","ttt2_role_optio_roundprep", function()
+		ClearOptios()
+	end)
+
+	hook.Add("DoPlayerDeath", "SetRightInflictorOnDeath_Optio_ICH_MAG_KEKSE_UND_ICH_HOFFE_DIESE_HOOK_EXISTIERT_SO_NICHT_BUH", function (ply, attacker, dmg)
+		if dmg:GetDamageType() == 8194 then
+			if attacker:IsPlayer() then
+				local weapon = attacker:GetActiveWeapon()
+				if weapon ~= nil then
+					ply.optio_data = weapon
+				end
+			end
+		end
+	end)
+
+	hook.Add("PlayerDeath", "ReviveANewTraitor", function(victim, inflictor, attacker)
+		local weapon = victim.optio_data
+		if attacker:GetRole() == ROLE_OPTIO and victim:GetTeam() ~= TEAM_TRAITOR and weapon ~= nil and weapon:GetClass() == "weapon_ttt_optioshotgun" then
+			victim.optio_data = nil
+			victim:Revive(respawn_time, function(p)
+				p:SetRole( ROLE_TRAITOR )
+			end)
+		end
+	end)
+end

@@ -40,9 +40,7 @@ SWEP.WorldModel = "models/weapons/w_shotgun.mdl"
 SWEP.IronSightsPos = Vector(-6.361, -3.701, 2.15)
 SWEP.IronSightsAng = Vector(0, 0, 0)
 
-SWEP.AllowDrop = false 
-
-local rspwn_time = GetConVar("ttt_cent_gladiator_time_of_respawn"):GetInt()
+SWEP.AllowDrop = false
 
 function SWEP:PrimaryAttack()
 
@@ -54,7 +52,6 @@ function SWEP:PrimaryAttack()
     sound.Play(self.Primary.Sound, self:GetPos(), self.Primary.SoundLevel)
 
     self:ShootBullet(self.Primary.Damage, self.Primary.Recoil, self.Primary.NumShots, self:GetPrimaryCone())
-    self:TakePrimaryAmmo(1)
 
     local owner = self:GetOwner()
     if not IsValid(owner) or owner:IsNPC() or (not owner.ViewPunch) then return end
@@ -63,21 +60,3 @@ function SWEP:PrimaryAttack()
     self.BaseClass.PrimaryAttack(self)
     
 end
-
-if SERVER then
-    hook.Add("PlayerDeath", "ReviveANewGladi", function(victim, inflictor, attacker)
-
-        if attacker:GetRole() == ROLE_CENTURION and victim:GetTeam() ~= TEAM_CENTURION and inflictor:GetClass() == "weapon_ttt_incridibilisgun" then
-
-            print("true")
-
-            victim:Revive(rspwn_time, function(p)
-                p:SetRole( ROLE_GLADIATOR )
-            end)
-        end
-    end)
-end
-
-hook.Add("ScalePlayerDamage", "Printinfl", function(ply, hitgroup, dmginfo)
-    print( dmginfo:GetInflictor():GetClass() )
-end)

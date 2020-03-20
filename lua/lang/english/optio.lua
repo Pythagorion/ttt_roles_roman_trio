@@ -10,3 +10,6 @@ L["body_found_" .. OPTIO.abbr] = "They were an Optio."
 L["search_role_" .. OPTIO.abbr] = "This person was an Optio!"
 L["target_" .. OPTIO.name] = "Optio"
 L["ttt2_desc_" .. OPTIO.name] = [[The Optio needs to win with the traitors!]]
+
+-- OTHER ROLE LANGUAGE STRINGS
+L["ttt2_cent_transformation_epop"] = "Alea jacta Est!"

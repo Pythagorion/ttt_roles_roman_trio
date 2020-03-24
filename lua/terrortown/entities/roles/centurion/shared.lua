@@ -90,6 +90,7 @@ if SERVER then
 			victim:Revive(rspwn_time, function(p)
 				p:SetRole( ROLE_GLADIATOR )
 			end)
+			SendFullStateUpdate()
 		end
 	end)
 end

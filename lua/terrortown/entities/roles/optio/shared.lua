@@ -145,7 +145,7 @@ end)
 
   			if tply:GetRole() == ROLE_OPTIO then continue end
   			if tply:GetTeam() ~= TEAM_TRAITOR then continue end
-  			if tply:Alive() then continue end -- hier bitte schauen ob das so stimmt
+  			if tply:IsPlayer() and tply:IsTerror() then continue end -- hier bitte schauen ob das so stimmt
 
   			num_t_alive = num_t_alive + 1
 		end
@@ -187,6 +187,7 @@ end)
 			victim:Revive(respawn_time, function(p)
 				p:SetRole( ROLE_TRAITOR )
 			end)
+			SendFullStateUpdate()
 		end
 	end)
 end
